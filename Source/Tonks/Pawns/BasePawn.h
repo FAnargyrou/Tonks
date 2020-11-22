@@ -7,6 +7,7 @@
 #include "BasePawn.generated.h"
 
 class UCapsuleComponent;
+class AProjectileBase;
 
 UCLASS()
 class TONKS_API ABasePawn : public APawn
@@ -27,6 +28,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void Move(FVector MoveDirection);
+	void Turn(FQuat TurnDirection);
+	void Rotate(FQuat RotationDirection);
+	void LookUp(FQuat LookUpDirection);
+	void Fire();
+
+private:
+	// COMPONENTS
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UCapsuleComponent* CapsuleComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -38,6 +47,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USceneComponent* ProjectileSpawnPoint;
 
-private:
-
+	// Variables
+	float PitchMaxLimit = 40.f;
+	float PitchMinLimit = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AProjectileBase> ProjectileClass;
 };

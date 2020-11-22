@@ -3,6 +3,7 @@
 
 #include "BasePawn.h"
 #include "Components/CapsuleComponent.h"
+#include "Tonks/Actors/ProjectileBase.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -49,3 +50,38 @@ void ABasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void ABasePawn::Move(FVector MoveDirection)
+{
+	AddActorLocalOffset(MoveDirection, true);
+}
+
+void ABasePawn::Turn(FQuat TurnDirection)
+{
+	AddActorLocalRotation(TurnDirection, true);
+}
+
+void ABasePawn::Rotate(FQuat RotationDirection)
+{
+	AddControllerYawInput(RotationDirection.Rotator().Yaw);
+	FRotator Rotation = FRotator(0.f, GetViewRotation().Yaw, 0.f);
+	TurretMesh->SetWorldRotation(Rotation);
+}
+
+void ABasePawn::LookUp(FQuat LookUpDirection)
+{
+	// TODO - Limit pitch input
+	AddControllerPitchInput(LookUpDirection.Rotator().Pitch);
+	GunMesh->SetWorldRotation(GetViewRotation());
+}
+
+void ABasePawn::Fire()
+{
+	if (ProjectileClass)
+	{
+		FVector Position = ProjectileSpawnPoint->GetComponentLocation();
+		FRotator Rotation = ProjectileSpawnPoint->GetComponentRotation();
+
+		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, Position, Rotation);
+		Projectile->SetOwner(this);
+	}
+}

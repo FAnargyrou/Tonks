@@ -26,10 +26,10 @@ void ATankPawn::BeginPlay()
 void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	Move();
-	Turn();
-	Rotate();
-	LookUp();
+	Move(MoveDirection);
+	Turn(TurnDirection);
+	Rotate(RotationDirection);
+	LookUp(LookUpDirection);
 }
 
 // Called to bind functionality to input
@@ -41,6 +41,7 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("Turn", this, &ATankPawn::CalculateTurnInput);
 	PlayerInputComponent->BindAxis("Rotate", this, &ATankPawn::CalculateRotateInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATankPawn::CalculateLookUpInput);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::Fire);
 }
 
 void ATankPawn::CalculateMoveInput(float Value)
@@ -69,27 +70,5 @@ void ATankPawn::CalculateLookUpInput(float Value)
 	LookUpDirection = FQuat(Rotation);
 }
 
-void ATankPawn::Move()
-{
-	AddActorLocalOffset(MoveDirection, true);
-}
 
-void ATankPawn::Turn()
-{
-	AddActorLocalRotation(TurnDirection, true);
-}
-
-void ATankPawn::Rotate()
-{
-	AddControllerYawInput(RotationDirection.Rotator().Yaw);
-	//SpringArm->SetWorldRotation(GetViewRotation());
-	FRotator Rotation = FRotator(0.f, GetViewRotation().Yaw, 0.f);
-	TurretMesh->SetWorldRotation(Rotation);
-}
-
-void ATankPawn::LookUp()
-{
-	AddControllerPitchInput(LookUpDirection.Rotator().Pitch);
-	GunMesh->SetWorldRotation(GetViewRotation());
-}
 

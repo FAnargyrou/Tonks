@@ -35,26 +35,28 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* Camera;
 
-	FVector MoveDirection;
-	FQuat TurnDirection;
-	FQuat RotationDirection;
-	FQuat LookUpDirection;
+	// INPUT FUNCTIONS
 
 	void CalculateMoveInput(float Value);
 	void CalculateTurnInput(float Value);
 	void CalculateRotateInput(float Value);
 	void CalculateLookUpInput(float Value);
 
-	void Move();
-	void Turn();
-	void Rotate();
-	void LookUp();
+
+
+	// VARIABLES
+
+	FVector MoveDirection;
+	FQuat TurnDirection;
+	FQuat RotationDirection;
+	FQuat LookUpDirection;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
 	float MoveSpeed = 300.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed = 150.f;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
 	float RotateSpeed = 100.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
 	float LookUpSpeed = 100.f;
 };
