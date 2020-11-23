@@ -4,6 +4,9 @@
 #include "BasePawn.h"
 #include "Components/CapsuleComponent.h"
 #include "Tonks/Actors/ProjectileBase.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -26,7 +29,11 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	ProjectileSpawnPoint->SetupAttachment(GunMesh);
 
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+	SpringArm->SetupAttachment(TurretMesh);
 
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +47,7 @@ void ABasePawn::BeginPlay()
 void ABasePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	Controller->SetControlRotation(GunMesh->GetComponentRotation());
 }
 
 // Called to bind functionality to input
@@ -62,16 +69,13 @@ void ABasePawn::Turn(FQuat TurnDirection)
 
 void ABasePawn::Rotate(FQuat RotationDirection)
 {
-	AddControllerYawInput(RotationDirection.Rotator().Yaw);
-	FRotator Rotation = FRotator(0.f, GetViewRotation().Yaw, 0.f);
-	TurretMesh->SetWorldRotation(Rotation);
+	TurretMesh->AddRelativeRotation(RotationDirection);
 }
 
 void ABasePawn::LookUp(FQuat LookUpDirection)
 {
 	// TODO - Limit pitch input
-	AddControllerPitchInput(LookUpDirection.Rotator().Pitch);
-	GunMesh->SetWorldRotation(GetViewRotation());
+	GunMesh->AddRelativeRotation(LookUpDirection);
 }
 
 void ABasePawn::Fire()
@@ -83,5 +87,22 @@ void ABasePawn::Fire()
 
 		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, Position, Rotation);
 		Projectile->SetOwner(this);
+	}
+}
+
+void ABasePawn::AttachSpringArmToGun()
+{
+	if (SpringArm)
+	{
+		// TODO - Store SpringArm's original values so it can be safely reverted to Original Settings when coming out of Aim Mode
+		FVector RelativeLocation = GunMesh->GetRelativeLocation();
+		RelativeLocation.Z += AimZOffset;
+		SpringArm->SetRelativeLocation(RelativeLocation);
+		SpringArm->TargetArmLength = 0.f;
+		SpringArm->bUsePawnControlRotation = true;
+
+		FAttachmentTransformRules Rules(EAttachmentRule::KeepWorld , false);
+
+		SpringArm->AttachToComponent(GunMesh, Rules);
 	}
 }

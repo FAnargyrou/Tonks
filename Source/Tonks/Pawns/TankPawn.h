@@ -29,18 +29,15 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* SpringArm;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* Camera;
-
 	// INPUT FUNCTIONS
 
 	void CalculateMoveInput(float Value);
 	void CalculateTurnInput(float Value);
 	void CalculateRotateInput(float Value);
 	void CalculateLookUpInput(float Value);
+
+	void SetAimMode();
+	void SetMoveMode();
 
 
 

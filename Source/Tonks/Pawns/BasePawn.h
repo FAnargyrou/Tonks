@@ -8,6 +8,8 @@
 
 class UCapsuleComponent;
 class AProjectileBase;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class TONKS_API ABasePawn : public APawn
@@ -33,6 +35,7 @@ protected:
 	void Rotate(FQuat RotationDirection);
 	void LookUp(FQuat LookUpDirection);
 	void Fire();
+	void AttachSpringArmToGun();
 
 private:
 	// COMPONENTS
@@ -46,10 +49,15 @@ private:
 		UStaticMeshComponent* GunMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USceneComponent* ProjectileSpawnPoint;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		USpringArmComponent* SpringArm;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		UCameraComponent* Camera;
 
 	// Variables
-	float PitchMaxLimit = 40.f;
-	float PitchMinLimit = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AProjectileBase> ProjectileClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
+	// Sets SpringArm/Camera Z Offset from Turret's Z Offset when in Aim Mode
+	float AimZOffset = 10.f;
 };

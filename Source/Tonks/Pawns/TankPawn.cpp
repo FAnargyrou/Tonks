@@ -2,16 +2,10 @@
 
 
 #include "TankPawn.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
 
 ATankPawn::ATankPawn()
 {
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArm->SetupAttachment(RootComponent);
 
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(SpringArm);
 	// Camera->bUsePawnControlRotation = true;
 }
 
@@ -26,10 +20,17 @@ void ATankPawn::BeginPlay()
 void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	Move(MoveDirection);
 	Turn(TurnDirection);
 	Rotate(RotationDirection);
 	LookUp(LookUpDirection);
+
+	// TEST
+	// FRotator r = GetViewRotation();
+	// r.Pitch = SpringArm->GetRelativeRotation().Pitch;
+	// SpringArm->SetWorldRotation(r);
+
 }
 
 // Called to bind functionality to input
@@ -42,6 +43,8 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("Rotate", this, &ATankPawn::CalculateRotateInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATankPawn::CalculateLookUpInput);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::Fire);
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ATankPawn::SetAimMode);
+	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATankPawn::SetMoveMode);
 }
 
 void ATankPawn::CalculateMoveInput(float Value)
@@ -68,6 +71,16 @@ void ATankPawn::CalculateLookUpInput(float Value)
 	float Amount = Value * LookUpSpeed * GetWorld()->DeltaTimeSeconds;
 	FRotator Rotation = FRotator(Amount, 0.f, 0.f);
 	LookUpDirection = FQuat(Rotation);
+}
+
+void ATankPawn::SetAimMode()
+{
+	AttachSpringArmToGun();
+}
+
+void ATankPawn::SetMoveMode()
+{
+	// TODO - Revert Spring arm To Original Settings
 }
 
 

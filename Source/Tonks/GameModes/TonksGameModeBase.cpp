@@ -2,6 +2,7 @@
 
 
 #include "TonksGameModeBase.h"
+
 void ATonksGameModeBase::BeginPlay()
 {
 	// Get references here
