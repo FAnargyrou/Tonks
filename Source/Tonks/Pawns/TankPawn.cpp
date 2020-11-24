@@ -75,12 +75,12 @@ void ATankPawn::CalculateLookUpInput(float Value)
 
 void ATankPawn::SetAimMode()
 {
-	AttachSpringArmToGun();
+	AimMode();
 }
 
 void ATankPawn::SetMoveMode()
 {
-	// TODO - Revert Spring arm To Original Settings
+	MoveMode();
 }
 
 

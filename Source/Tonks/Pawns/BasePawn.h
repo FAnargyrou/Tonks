@@ -35,7 +35,8 @@ protected:
 	void Rotate(FQuat RotationDirection);
 	void LookUp(FQuat LookUpDirection);
 	void Fire();
-	void AttachSpringArmToGun();
+	void AimMode();
+	void MoveMode();
 
 private:
 	// COMPONENTS
@@ -50,6 +51,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USceneComponent* ProjectileSpawnPoint;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		USceneComponent* AimModePoint;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* Camera;
@@ -60,4 +63,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
 	// Sets SpringArm/Camera Z Offset from Turret's Z Offset when in Aim Mode
 	float AimZOffset = 10.f;
+
+	float OriginalSpringArmLength = 0.f;
+	FRotator OriginalSpringArmRotation;
+
+	bool bIsInAimMode = false;
 };

@@ -29,8 +29,11 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	ProjectileSpawnPoint->SetupAttachment(GunMesh);
 
+	AimModePoint = CreateDefaultSubobject<USceneComponent>(TEXT("Aim Mode Point"));
+	AimModePoint->SetupAttachment(GunMesh);
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArm->SetupAttachment(TurretMesh);
+	SpringArm->SetupAttachment(RootComponent);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -41,6 +44,8 @@ void ABasePawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	OriginalSpringArmLength = SpringArm->TargetArmLength;
+	OriginalSpringArmRotation = SpringArm->GetRelativeRotation();
 }
 
 // Called every frame
@@ -59,28 +64,28 @@ void ABasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABasePawn::Move(FVector MoveDirection)
 {
-	AddActorLocalOffset(MoveDirection, true);
+	if (!bIsInAimMode) AddActorLocalOffset(MoveDirection, true);
 }
 
 void ABasePawn::Turn(FQuat TurnDirection)
 {
-	AddActorLocalRotation(TurnDirection, true);
+	if (!bIsInAimMode) AddActorLocalRotation(TurnDirection, true);
 }
 
 void ABasePawn::Rotate(FQuat RotationDirection)
 {
-	TurretMesh->AddRelativeRotation(RotationDirection);
+	if (bIsInAimMode) TurretMesh->AddRelativeRotation(RotationDirection);
 }
 
 void ABasePawn::LookUp(FQuat LookUpDirection)
 {
 	// TODO - Limit pitch input
-	GunMesh->AddRelativeRotation(LookUpDirection);
+	if (bIsInAimMode) GunMesh->AddRelativeRotation(LookUpDirection);
 }
 
 void ABasePawn::Fire()
 {
-	if (ProjectileClass)
+	if (ProjectileClass && bIsInAimMode)
 	{
 		FVector Position = ProjectileSpawnPoint->GetComponentLocation();
 		FRotator Rotation = ProjectileSpawnPoint->GetComponentRotation();
@@ -90,19 +95,32 @@ void ABasePawn::Fire()
 	}
 }
 
-void ABasePawn::AttachSpringArmToGun()
+void ABasePawn::AimMode()
 {
-	if (SpringArm)
+	if (SpringArm && !bIsInAimMode)
 	{
 		// TODO - Store SpringArm's original values so it can be safely reverted to Original Settings when coming out of Aim Mode
-		FVector RelativeLocation = GunMesh->GetRelativeLocation();
-		RelativeLocation.Z += AimZOffset;
-		SpringArm->SetRelativeLocation(RelativeLocation);
 		SpringArm->TargetArmLength = 0.f;
 		SpringArm->bUsePawnControlRotation = true;
 
-		FAttachmentTransformRules Rules(EAttachmentRule::KeepWorld , false);
+		FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget , false);
 
-		SpringArm->AttachToComponent(GunMesh, Rules);
+		SpringArm->AttachToComponent(AimModePoint, Rules);
+		bIsInAimMode = true;
+	}
+}
+
+void ABasePawn::MoveMode()
+{
+	if (SpringArm && bIsInAimMode)
+	{
+		SpringArm->TargetArmLength = OriginalSpringArmLength;
+		SpringArm->bUsePawnControlRotation = false;
+		SpringArm->SetRelativeRotation(OriginalSpringArmRotation);
+
+		FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, false);
+
+		SpringArm->AttachToComponent(RootComponent, Rules);
+		bIsInAimMode = false;
 	}
 }
