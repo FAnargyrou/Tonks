@@ -40,6 +40,8 @@ protected:
 
 private:
 	// COMPONENTS
+
+	// Mesh Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UCapsuleComponent* CapsuleComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -48,24 +50,35 @@ private:
 		UStaticMeshComponent* TurretMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* GunMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-		USceneComponent* ProjectileSpawnPoint;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-		USceneComponent* AimModePoint;
+
+	
+
+	// Camera Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* Camera;
 
-	// Variables
+	// Dummy Components
+
+	// Points to where the Projectile will spawn when player Fires
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		USceneComponent* ProjectileSpawnPoint;
+
+	// Points to where the camera will go when the player goes into Aim Mode (When holding Right Mouse Click)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		USceneComponent* AimModePoint;
+
+	// VARIABLES
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AProjectileBase> ProjectileClass;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
-	// Sets SpringArm/Camera Z Offset from Turret's Z Offset when in Aim Mode
-	float AimZOffset = 10.f;
-
+	// Spring Arm Length used in MoveMode; Obtained from whatever value is set in the Blueprint
 	float OriginalSpringArmLength = 0.f;
-	FRotator OriginalSpringArmRotation;
-
+	// Boolean to determine if Player is in Move or Rotate/Aim mode (ie. hold mouse right click)
 	bool bIsInAimMode = false;
+	// To ensure a smooth transition between Aim Mode and Move Mode cameras, we're using this variable to store
+	// the Controller's original Rotation before moving into Aim Mode;
+	// In Aim Mode, the Player Controller rotation gets replaced by the GunMesh's WorldRotation
+	FRotator MoveModeRotation;
 };

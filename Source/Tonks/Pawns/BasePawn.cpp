@@ -34,6 +34,7 @@ ABasePawn::ABasePawn()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->bUsePawnControlRotation = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -45,14 +46,18 @@ void ABasePawn::BeginPlay()
 	Super::BeginPlay();
 	
 	OriginalSpringArmLength = SpringArm->TargetArmLength;
-	OriginalSpringArmRotation = SpringArm->GetRelativeRotation();
+
+	// Sets Controller Rotation's intial Pitch to SpringArm's Relative Pitch 
+	// (To ensure a smooth Start in the game, instead of spawning the camera straight at the back of the tank)
+	FRotator Rotator = GetControlRotation();
+	Rotator.Pitch = SpringArm->GetRelativeRotation().Pitch;
+	Controller->SetControlRotation(Rotator);
 }
 
 // Called every frame
 void ABasePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	Controller->SetControlRotation(GunMesh->GetComponentRotation());
 }
 
 // Called to bind functionality to input
@@ -74,13 +79,23 @@ void ABasePawn::Turn(FQuat TurnDirection)
 
 void ABasePawn::Rotate(FQuat RotationDirection)
 {
-	if (bIsInAimMode) TurretMesh->AddRelativeRotation(RotationDirection);
+	AddControllerYawInput(RotationDirection.Rotator().Yaw);
+	if (bIsInAimMode)
+	{
+		// Rotates the TurretMesh's Yaw value; We want the Turret to be attached to the base so only Yaw rotation should be valid here
+		FRotator Rotation(0.f, GetControlRotation().Yaw, 0.f);
+		TurretMesh->SetWorldRotation(Rotation);
+	}
 }
 
 void ABasePawn::LookUp(FQuat LookUpDirection)
 {
+	AddControllerPitchInput(LookUpDirection.Rotator().Pitch * -1.f);
 	// TODO - Limit pitch input
-	if (bIsInAimMode) GunMesh->AddRelativeRotation(LookUpDirection);
+	if (bIsInAimMode)
+	{
+		GunMesh->SetWorldRotation(GetControlRotation());
+	}
 }
 
 void ABasePawn::Fire()
@@ -95,13 +110,14 @@ void ABasePawn::Fire()
 	}
 }
 
+// Attaches the SpringArm/Player Camera to the AimModePoint Component, which should be set to somewhere around the GunMesh
 void ABasePawn::AimMode()
 {
 	if (SpringArm && !bIsInAimMode)
 	{
-		// TODO - Store SpringArm's original values so it can be safely reverted to Original Settings when coming out of Aim Mode
 		SpringArm->TargetArmLength = 0.f;
-		SpringArm->bUsePawnControlRotation = true;
+		MoveModeRotation = GetControlRotation();
+		Controller->SetControlRotation(GunMesh->GetComponentRotation());
 
 		FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget , false);
 
@@ -110,13 +126,13 @@ void ABasePawn::AimMode()
 	}
 }
 
+// Attaches the SpringArm/Player Camera back to it's original Position and allows player to move around again
 void ABasePawn::MoveMode()
 {
 	if (SpringArm && bIsInAimMode)
 	{
 		SpringArm->TargetArmLength = OriginalSpringArmLength;
-		SpringArm->bUsePawnControlRotation = false;
-		SpringArm->SetRelativeRotation(OriginalSpringArmRotation);
+		Controller->SetControlRotation(MoveModeRotation);
 
 		FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, false);
 

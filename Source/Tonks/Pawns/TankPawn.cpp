@@ -6,7 +6,6 @@
 ATankPawn::ATankPawn()
 {
 
-	// Camera->bUsePawnControlRotation = true;
 }
 
 // Called when the game starts or when spawned
@@ -25,12 +24,6 @@ void ATankPawn::Tick(float DeltaTime)
 	Turn(TurnDirection);
 	Rotate(RotationDirection);
 	LookUp(LookUpDirection);
-
-	// TEST
-	// FRotator r = GetViewRotation();
-	// r.Pitch = SpringArm->GetRelativeRotation().Pitch;
-	// SpringArm->SetWorldRotation(r);
-
 }
 
 // Called to bind functionality to input

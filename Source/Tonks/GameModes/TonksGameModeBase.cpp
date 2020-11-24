@@ -5,9 +5,7 @@
 
 void ATonksGameModeBase::BeginPlay()
 {
-	// Get references here
-
-	// Call HandleGameStart()
+	Super::BeginPlay();
 }
 
 void ATonksGameModeBase::HandleGameStart()
