@@ -30,14 +30,6 @@ void ATankPawn::Tick(float DeltaTime)
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("Move", this, &ATankPawn::CalculateMoveInput);
-	PlayerInputComponent->BindAxis("Turn", this, &ATankPawn::CalculateTurnInput);
-	PlayerInputComponent->BindAxis("Rotate", this, &ATankPawn::CalculateRotateInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &ATankPawn::CalculateLookUpInput);
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::Fire);
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ATankPawn::SetAimMode);
-	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATankPawn::SetMoveMode);
 }
 
 void ATankPawn::CalculateMoveInput(float Value)

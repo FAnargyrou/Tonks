@@ -26,6 +26,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Fire();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,7 +36,6 @@ protected:
 	void Turn(FQuat TurnDirection);
 	void Rotate(FQuat RotationDirection);
 	void LookUp(FQuat LookUpDirection);
-	void Fire();
 	void AimMode();
 	void MoveMode();
 
