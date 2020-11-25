@@ -7,6 +7,8 @@
 #include "ProjectileBase.generated.h"
 
 class UProjectileMovementComponent;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class TONKS_API AProjectileBase : public AActor
@@ -14,16 +16,25 @@ class TONKS_API AProjectileBase : public AActor
 	GENERATED_BODY()
 	
 private:
+	// COMPONENTS
+
 	UPROPERTY(VisibleAnywhere, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UProjectileMovementComponent* ProjectileMovement;
+		UProjectileMovementComponent* ProjectileMovement;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* ProjectileMesh;
+		UStaticMeshComponent* ProjectileMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		USpringArmComponent* SpringArm;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		UCameraComponent* Camera;
+
+	// VARIABLES
+
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	TSubclassOf<UDamageType> DamageType;
+		TSubclassOf<UDamageType> DamageType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	float MovementSpeed = 1400.f;
+		float MovementSpeed = 1400.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
-	float Damage = 50.f;
+		float Damage = 50.f;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -31,6 +42,9 @@ private:
 public:	
 	// Sets default values for this actor's properties
 	AProjectileBase();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	// Called when the game starts or when spawned

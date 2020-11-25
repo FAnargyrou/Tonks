@@ -5,7 +5,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Tonks/Actors/ProjectileBase.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
 // Sets default values
@@ -107,6 +106,10 @@ void ABasePawn::Fire()
 
 		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, Position, Rotation);
 		Projectile->SetOwner(this);
+
+		APlayerController* Player = Cast<APlayerController>(Controller);
+		if (Player)
+			Player->SetViewTarget(Projectile);
 	}
 }
 
