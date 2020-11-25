@@ -9,6 +9,7 @@
 class UProjectileMovementComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class ATonksGameModeBase;
 
 UCLASS()
 class TONKS_API AProjectileBase : public AActor
@@ -27,6 +28,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* Camera;
 
+	// FUNCTIONS
+
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	// VARIABLES
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
@@ -35,9 +41,7 @@ private:
 		float MovementSpeed = 1400.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 		float Damage = 50.f;
-
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	ATonksGameModeBase* GameModeRef;
 
 public:	
 	// Sets default values for this actor's properties

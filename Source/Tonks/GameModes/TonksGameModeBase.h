@@ -6,9 +6,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "TonksGameModeBase.generated.h"
 
-/**
- * 
- */
+class ABasePawn;
+class ATankPlayerController;
+
+
 UCLASS()
 class TONKS_API ATonksGameModeBase : public AGameModeBase
 {
@@ -16,6 +17,8 @@ class TONKS_API ATonksGameModeBase : public AGameModeBase
 public:
 
 	void ActorDied(AActor* DeadActor);
+	void StartTurn();
+	void EndTurn();
 
 protected:
 	virtual void BeginPlay() override;
@@ -25,8 +28,12 @@ protected:
 	void GameOver();
 
 private:
-
 	void HandleGameStart();
 	void HandeGameOver();
+
+	int8 TotalTanks = 0;
+	TArray<int32> TurnOrder;
+	TArray<ABasePawn*> Tanks;
+	ATankPlayerController* PlayerControllerRef;
 	
 };

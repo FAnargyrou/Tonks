@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Tonks/GameModes/TonksGameModeBase.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -35,6 +36,8 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameModeRef = Cast<ATonksGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	
 }
 
@@ -58,6 +61,6 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
 	}
-
+	GameModeRef->EndTurn();
 	Destroy();
 }
