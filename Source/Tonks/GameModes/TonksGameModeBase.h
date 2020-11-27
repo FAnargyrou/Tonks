@@ -32,6 +32,7 @@ private:
 	void HandeGameOver();
 
 	int8 TotalTanks = 0;
+	int8 CurrentTurnIndex = 0;
 	TArray<int32> TurnOrder;
 	TArray<ABasePawn*> Tanks;
 	ATankPlayerController* PlayerControllerRef;

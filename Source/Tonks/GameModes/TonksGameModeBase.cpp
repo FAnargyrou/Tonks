@@ -40,10 +40,10 @@ void ATonksGameModeBase::BeginPlay()
 
 void ATonksGameModeBase::StartTurn()
 {
-	if (PlayerControllerRef && Tanks[0])
+	if (PlayerControllerRef && Tanks[CurrentTurnIndex])
 	{
-		PlayerControllerRef->Possess(Tanks[0]);
-		Tanks[0]->SetOnTurn(true);
+		PlayerControllerRef->Possess(Tanks[CurrentTurnIndex]);
+		Tanks[CurrentTurnIndex]->SetOnTurn(true);
 	}
 }
 
@@ -54,7 +54,9 @@ void ATonksGameModeBase::EndTurn()
 	if (PlayerControllerRef)
 	{
 		PlayerControllerRef->UnPossess();
-		Tanks.Swap(0, TotalTanks - 1);
+		if (++CurrentTurnIndex >= TotalTanks)
+			CurrentTurnIndex = 0;
+
 		StartTurn();
 	}
 }
