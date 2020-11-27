@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Tonks © 2020 Felipe Anargyrou. All Rights Reserved
 
 #pragma once
 
@@ -27,6 +27,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void Fire();
+	void SetOnTurn(bool bOnTurn);
 
 protected:
 	// Called when the game starts or when spawned
@@ -78,6 +79,8 @@ private:
 	float OriginalSpringArmLength = 0.f;
 	// Boolean to determine if Player is in Move or Rotate/Aim mode (ie. hold mouse right click)
 	bool bIsInAimMode = false;
+	// Boolean to dermine whether Pawn is on their Turn or Not
+	bool bIsOnTurn = false;
 	// To ensure a smooth transition between Aim Mode and Move Mode cameras, we're using this variable to store
 	// the Controller's original Rotation before moving into Aim Mode;
 	// In Aim Mode, the Player Controller rotation gets replaced by the GunMesh's WorldRotation

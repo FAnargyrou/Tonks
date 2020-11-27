@@ -33,6 +33,8 @@ void ATonksGameModeBase::BeginPlay()
 	}
 
 	PlayerControllerRef = Cast<ATankPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	StartTurn();
 }
 
 
@@ -41,6 +43,7 @@ void ATonksGameModeBase::StartTurn()
 	if (PlayerControllerRef && Tanks[0])
 	{
 		PlayerControllerRef->Possess(Tanks[0]);
+		Tanks[0]->SetOnTurn(true);
 	}
 }
 
@@ -48,9 +51,12 @@ void ATonksGameModeBase::EndTurn()
 {
 	// Temp solution for test purposes
 	// TODO - Improve implementation so player controlled pawn can smoothly transition
-	PlayerControllerRef->UnPossess();
-	Tanks.Swap(0, TotalTanks - 1);
-	StartTurn();
+	if (PlayerControllerRef)
+	{
+		PlayerControllerRef->UnPossess();
+		Tanks.Swap(0, TotalTanks - 1);
+		StartTurn();
+	}
 }
 
 void ATonksGameModeBase::HandleGameStart()

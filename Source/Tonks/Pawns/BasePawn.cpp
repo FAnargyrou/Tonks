@@ -68,18 +68,18 @@ void ABasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABasePawn::Move(FVector MoveDirection)
 {
-	if (!bIsInAimMode) AddActorLocalOffset(MoveDirection, true);
+	if (!bIsInAimMode && bIsOnTurn) AddActorLocalOffset(MoveDirection, true);
 }
 
 void ABasePawn::Turn(FQuat TurnDirection)
 {
-	if (!bIsInAimMode) AddActorLocalRotation(TurnDirection, true);
+	if (!bIsInAimMode && bIsOnTurn) AddActorLocalRotation(TurnDirection, true);
 }
 
 void ABasePawn::Rotate(FQuat RotationDirection)
 {
 	AddControllerYawInput(RotationDirection.Rotator().Yaw);
-	if (bIsInAimMode)
+	if (bIsInAimMode && bIsOnTurn)
 	{
 		// Rotates the TurretMesh's Yaw value; We want the Turret to be attached to the base so only Yaw rotation should be valid here
 		FRotator Rotation(0.f, GetControlRotation().Yaw, 0.f);
@@ -91,7 +91,7 @@ void ABasePawn::LookUp(FQuat LookUpDirection)
 {
 	AddControllerPitchInput(LookUpDirection.Rotator().Pitch * -1.f);
 	// TODO - Limit pitch input
-	if (bIsInAimMode)
+	if (bIsInAimMode && bIsOnTurn)
 	{
 		GunMesh->SetWorldRotation(GetControlRotation());
 	}
@@ -110,14 +110,21 @@ void ABasePawn::Fire()
 		APlayerController* Player = Cast<APlayerController>(Controller);
 		if (Player)
 			Player->SetViewTarget(Projectile);
+		MoveMode();
+		bIsOnTurn = false;
 	}
+}
+
+void ABasePawn::SetOnTurn(bool bOnTurn)
+{
+	bIsOnTurn = bOnTurn;
 }
 
 // TODO - Implement FMath::FInterpConstantTo to reproduce a smooth transition between Aim and Move Modes
 // Attaches the SpringArm/Player Camera to the AimModePoint Component, which should be set to somewhere around the GunMesh
 void ABasePawn::AimMode()
 {
-	if (SpringArm && !bIsInAimMode)
+	if (SpringArm && !bIsInAimMode && bIsOnTurn)
 	{
 		SpringArm->TargetArmLength = 0.f;
 		MoveModeRotation = GetControlRotation();
@@ -133,7 +140,7 @@ void ABasePawn::AimMode()
 // Attaches the SpringArm/Player Camera back to it's original Position and allows player to move around again
 void ABasePawn::MoveMode()
 {
-	if (SpringArm && bIsInAimMode)
+	if (SpringArm && bIsInAimMode && bIsOnTurn)
 	{
 		SpringArm->TargetArmLength = OriginalSpringArmLength;
 		Controller->SetControlRotation(MoveModeRotation);
