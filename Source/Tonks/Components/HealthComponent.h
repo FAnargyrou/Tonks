@@ -24,9 +24,9 @@ protected:
 	void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
 private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthPoints", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth = 100.f;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthPoints", meta = (AllowPrivateAccess = "true"))
 	float CurrentHealth = 0.f;
 
 	ATonksGameModeBase* GameMode;
