@@ -44,6 +44,7 @@ void ATonksGameModeBase::StartTurn()
 	{
 		PlayerControllerRef->Possess(Tanks[CurrentTurnIndex]);
 		Tanks[CurrentTurnIndex]->SetOnTurn(true);
+		Tanks[CurrentTurnIndex]->ResetMovement();
 	}
 }
 

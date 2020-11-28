@@ -28,6 +28,7 @@ public:
 
 	void Fire();
 	void SetOnTurn(bool bOnTurn);
+	void ResetMovement();
 
 protected:
 	// Called when the game starts or when spawned
@@ -75,14 +76,23 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AProjectileBase> ProjectileClass;
+
 	// Spring Arm Length used in MoveMode; Obtained from whatever value is set in the Blueprint
 	float OriginalSpringArmLength = 0.f;
+
 	// Boolean to determine if Player is in Move or Rotate/Aim mode (ie. hold mouse right click)
 	bool bIsInAimMode = false;
+
 	// Boolean to dermine whether Pawn is on their Turn or Not
 	bool bIsOnTurn = false;
+
 	// To ensure a smooth transition between Aim Mode and Move Mode cameras, we're using this variable to store
 	// the Controller's original Rotation before moving into Aim Mode;
 	// In Aim Mode, the Player Controller rotation gets replaced by the GunMesh's WorldRotation
 	FRotator MoveModeRotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	float MaxDistance = 1500.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	float MoveDistance = 1500.f;
 };

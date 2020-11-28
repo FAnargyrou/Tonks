@@ -51,12 +51,12 @@ private:
 	FQuat RotationDirection;
 	FQuat LookUpDirection;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float MoveSpeed = 300.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed = 150.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float RotateSpeed = 100.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float LookUpSpeed = 100.f;
 };

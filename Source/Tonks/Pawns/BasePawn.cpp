@@ -68,7 +68,11 @@ void ABasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABasePawn::Move(FVector MoveDirection)
 {
-	if (!bIsInAimMode && bIsOnTurn) AddActorLocalOffset(MoveDirection, true);
+	if (!bIsInAimMode && bIsOnTurn && MoveDistance > 0.f)
+	{
+		AddActorLocalOffset(MoveDirection, true);
+		MoveDistance = FMath::Clamp(MoveDistance - MoveDirection.Size(), 0.f, MaxDistance);
+	}
 }
 
 void ABasePawn::Turn(FQuat TurnDirection)
@@ -118,6 +122,12 @@ void ABasePawn::Fire()
 void ABasePawn::SetOnTurn(bool bOnTurn)
 {
 	bIsOnTurn = bOnTurn;
+
+}
+
+void ABasePawn::ResetMovement()
+{
+	MoveDistance = MaxDistance;
 }
 
 // TODO - Implement FMath::FInterpConstantTo to reproduce a smooth transition between Aim and Move Modes
