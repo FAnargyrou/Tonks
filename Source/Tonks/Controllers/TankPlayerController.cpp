@@ -22,6 +22,12 @@ void ATankPlayerController::OnPossess(APawn* PawnToPossess)
 	Super::OnPossess(PawnToPossess);
 
 	if (!PawnToPossess) return;
+	
+	// Get Possessed pawn rotation and reset Roll to 0.f. 
+	// This prevents camera rotation from being glitched if pawn is possessed on an angled surface
+	FRotator NewRotation = PawnToPossess->GetActorRotation();
+	NewRotation.Roll = 0.f;
+	SetControlRotation(NewRotation);
 
 	TankPawn = Cast<ATankPawn>(PawnToPossess);
 }
