@@ -112,10 +112,13 @@ void ABasePawn::Rotate(FQuat RotationDirection)
 void ABasePawn::LookUp(FQuat LookUpDirection)
 {
 	AddControllerPitchInput(LookUpDirection.Rotator().Pitch * -1.f);
-	// TODO - Limit pitch input
 	if (bIsInAimMode && bIsOnTurn)
 	{
-		GunMesh->AddLocalRotation(LookUpDirection);
+		// Clamps Gun's rotation to prevent it from rotating 360 degrees
+		FRotator NewRotation = GunMesh->GetRelativeRotation();
+		NewRotation.Pitch += LookUpDirection.Rotator().Pitch; 
+		NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch, GunMinPitch, GunMaxPitch);
+		GunMesh->SetRelativeRotation(NewRotation);
 	}
 }
 
