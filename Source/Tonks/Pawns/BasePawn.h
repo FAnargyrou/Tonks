@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "BasePawn.generated.h"
 
-class UCapsuleComponent;
+class UBoxComponent;
 class AProjectileBase;
 class USpringArmComponent;
 class UCameraComponent;
@@ -46,7 +46,7 @@ private:
 
 	// Mesh Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-		UCapsuleComponent* CapsuleComp;
+		UBoxComponent* BoxComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* BodyMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

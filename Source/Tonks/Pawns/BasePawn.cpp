@@ -2,10 +2,11 @@
 
 
 #include "BasePawn.h"
-#include "Components/CapsuleComponent.h"
+#include "Components/BoxComponent.h"
 #include "Tonks/Actors/ProjectileBase.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/World.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -13,8 +14,8 @@ ABasePawn::ABasePawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Collider"));
-	RootComponent = CapsuleComp;
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
+	RootComponent = BoxComponent;
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body Mesh"));
 	BodyMesh->SetupAttachment(RootComponent);
@@ -57,6 +58,20 @@ void ABasePawn::BeginPlay()
 void ABasePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FVector ActorUpVector = GetActorUpVector();
+	float DotProduct = FVector::DotProduct(ActorUpVector, FVector::UpVector);
+
+	// UE_LOG(LogTemp, Warning, TEXT("Dot Product = %f"), DotProduct);
+	UE_LOG(LogTemp, Warning, TEXT("Actor Rotation = %s"), *GetActorRotation().ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Up Vector = %s"), *GetActorUpVector().ToString());
+
+	FVector Direction;
+
+	if (DotProduct <= 0.f)
+	{
+		SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	}
 }
 
 // Called to bind functionality to input
@@ -70,7 +85,7 @@ void ABasePawn::Move(FVector MoveDirection)
 {
 	if (!bIsInAimMode && bIsOnTurn && MoveDistance > 0.f)
 	{
-		AddActorLocalOffset(MoveDirection, true);
+		AddActorLocalOffset(MoveDirection, false);
 		MoveDistance = FMath::Clamp(MoveDistance - MoveDirection.Size(), 0.f, MaxDistance);
 	}
 }
