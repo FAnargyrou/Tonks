@@ -62,15 +62,17 @@ void ABasePawn::Tick(float DeltaTime)
 	FVector ActorUpVector = GetActorUpVector();
 	float DotProduct = FVector::DotProduct(ActorUpVector, FVector::UpVector);
 
-	// UE_LOG(LogTemp, Warning, TEXT("Dot Product = %f"), DotProduct);
-	UE_LOG(LogTemp, Warning, TEXT("Actor Rotation = %s"), *GetActorRotation().ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Up Vector = %s"), *GetActorUpVector().ToString());
-
-	FVector Direction;
-
-	if (DotProduct <= 0.f)
+	if (DotProduct <= 0.f || FMath::IsNearlyZero(DotProduct, FLOAT_NORMAL_THRESH))
 	{
-		SetActorRotation(FRotator(0.f, 0.f, 0.f));
+		FVector Velocity = BoxComponent->GetComponentVelocity();
+		Velocity.Normalize();
+
+		if (Velocity.IsNearlyZero())
+		{
+			FRotator Rot = GetActorRotation();
+			Rot.Normalize();
+			SetActorRotation(FRotator(0.f, Rot.Yaw, 0.f));
+		}
 	}
 }
 
@@ -101,8 +103,9 @@ void ABasePawn::Rotate(FQuat RotationDirection)
 	if (bIsInAimMode && bIsOnTurn)
 	{
 		// Rotates the TurretMesh's Yaw value; We want the Turret to be attached to the base so only Yaw rotation should be valid here
-		FRotator Rotation(0.f, GetControlRotation().Yaw, 0.f);
-		TurretMesh->SetWorldRotation(Rotation);
+		FRotator ActorRotation = BodyMesh->GetComponentRotation();
+		FRotator Rotation(ActorRotation.Pitch, GetControlRotation().Yaw, ActorRotation.Roll);
+		TurretMesh->AddLocalRotation(RotationDirection);
 	}
 }
 
@@ -112,7 +115,7 @@ void ABasePawn::LookUp(FQuat LookUpDirection)
 	// TODO - Limit pitch input
 	if (bIsInAimMode && bIsOnTurn)
 	{
-		GunMesh->SetWorldRotation(GetControlRotation());
+		GunMesh->AddLocalRotation(LookUpDirection);
 	}
 }
 
@@ -158,6 +161,7 @@ void ABasePawn::AimMode()
 		FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget , false);
 
 		SpringArm->AttachToComponent(AimModePoint, Rules);
+		SpringArm->bUsePawnControlRotation = false;
 		bIsInAimMode = true;
 	}
 }
@@ -173,6 +177,7 @@ void ABasePawn::MoveMode()
 		FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, false);
 
 		SpringArm->AttachToComponent(RootComponent, Rules);
+		SpringArm->bUsePawnControlRotation = true;
 		bIsInAimMode = false;
 	}
 }
