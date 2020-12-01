@@ -3,10 +3,12 @@
 
 #include "BasePawn.h"
 #include "Components/BoxComponent.h"
-#include "Tonks/Actors/ProjectileBase.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Tonks/Actors/ProjectileBase.h"
+#include "Tonks/GameModes/TonksGameModeBase.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -52,6 +54,12 @@ void ABasePawn::BeginPlay()
 	FRotator Rotator = GetControlRotation();
 	Rotator.Pitch = SpringArm->GetRelativeRotation().Pitch;
 	Controller->SetControlRotation(Rotator);
+
+	GameModeRef = Cast<ATonksGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (!GameModeRef)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Game Mode is not set to TonksGameModeBase. Game loop will not work as intended!"));
+	}
 }
 
 // Called every frame
@@ -182,5 +190,15 @@ void ABasePawn::MoveMode()
 		SpringArm->AttachToComponent(RootComponent, Rules);
 		SpringArm->bUsePawnControlRotation = true;
 		bIsInAimMode = false;
+	}
+}
+
+// Called if Controller decides to end turn without firing.
+void ABasePawn::EndTurn()
+{
+	if (GameModeRef && !bIsInAimMode && bIsOnTurn)
+	{
+		SetOnTurn(false);
+		GameModeRef->EndTurn();
 	}
 }

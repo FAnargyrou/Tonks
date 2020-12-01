@@ -10,6 +10,7 @@ class UBoxComponent;
 class AProjectileBase;
 class USpringArmComponent;
 class UCameraComponent;
+class ATonksGameModeBase;
 
 UCLASS()
 class TONKS_API ABasePawn : public APawn
@@ -40,8 +41,11 @@ protected:
 	void LookUp(FQuat LookUpDirection);
 	void AimMode();
 	void MoveMode();
+	void EndTurn();
 
 private:
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// COMPONENTS
 
 	// Mesh Components
@@ -72,6 +76,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USceneComponent* AimModePoint;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// VARIABLES
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
@@ -99,4 +104,6 @@ private:
 	float GunMinPitch = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true"))
 	float GunMaxPitch = 50.f;
+
+	ATonksGameModeBase* GameModeRef;
 };

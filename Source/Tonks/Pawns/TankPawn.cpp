@@ -68,5 +68,10 @@ void ATankPawn::SetMoveMode()
 	MoveMode();
 }
 
+void ATankPawn::EndTurnPressed()
+{
+	EndTurn();
+}
+
 
 

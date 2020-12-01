@@ -15,6 +15,7 @@ void ATankPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Aim", IE_Pressed, this, &ATankPlayerController::AimInputPressed);
 	InputComponent->BindAction("Aim", IE_Released, this, &ATankPlayerController::AimInputReleased);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ATankPlayerController::FireInput);
+	InputComponent->BindAction("EndTurn", IE_Pressed, this, &ATankPlayerController::EndTurnInput);
 }
 
 void ATankPlayerController::OnPossess(APawn* PawnToPossess)
@@ -85,5 +86,13 @@ void ATankPlayerController::FireInput()
 	if (TankPawn)
 	{
 		TankPawn->Fire();
+	}
+}
+
+void ATankPlayerController::EndTurnInput()
+{
+	if (TankPawn)
+	{
+		TankPawn->EndTurnPressed();
 	}
 }

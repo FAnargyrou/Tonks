@@ -29,6 +29,7 @@ private:
 	void AimInputPressed();
 	void AimInputReleased();
 	void FireInput();
+	void EndTurnInput();
 
 
 	ATankPawn* TankPawn;
