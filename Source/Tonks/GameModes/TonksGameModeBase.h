@@ -19,6 +19,7 @@ public:
 	void ActorDied(AActor* DeadActor);
 	void StartTurn();
 	void EndTurn();
+	void ApplyDamage(AActor* Instigator, AActor* OtherActor, const FHitResult& Hit, float Damage, TSubclassOf<UDamageType> DamageType);
 
 protected:
 	virtual void BeginPlay() override;

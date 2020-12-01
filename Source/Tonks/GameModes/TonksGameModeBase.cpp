@@ -62,6 +62,15 @@ void ATonksGameModeBase::EndTurn()
 	}
 }
 
+void ATonksGameModeBase::ApplyDamage(AActor* DamageCauser, AActor* OtherActor, const FHitResult& Hit, float Damage, TSubclassOf<UDamageType> DamageType)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OtherActor = %s"), *OtherActor->GetName());
+	if (OtherActor && DamageCauser)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, Damage, DamageCauser->GetInstigatorController(), DamageCauser, DamageType);
+	}
+}
+
 void ATonksGameModeBase::HandleGameStart()
 {
 }

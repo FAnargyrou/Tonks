@@ -56,11 +56,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 {
 	AActor* MyOwner = GetOwner();
 	if (!MyOwner) return;
-	UE_LOG(LogTemp, Warning, TEXT("OtherActor = %s"), *OtherActor->GetName());
-	if (OtherActor && OtherActor != this && OtherActor != MyOwner)
-	{
-		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
-	}
+	GameModeRef->ApplyDamage(this, OtherActor, Hit, Damage, DamageType);
 	GameModeRef->EndTurn();
 	Destroy();
 }
