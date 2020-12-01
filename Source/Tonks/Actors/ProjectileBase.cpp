@@ -56,7 +56,8 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 {
 	AActor* MyOwner = GetOwner();
 	if (!MyOwner) return;
-	GameModeRef->ApplyDamage(this, OtherActor, Hit, Damage, DamageType);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *OtherActor->GetName());
+	GameModeRef->CalculateRadialDamage(Damage, MinimumDamage, OtherActor, this, InnerRadius, OuterRadius, DamageFalloff, DamageType);
 	GameModeRef->EndTurn();
 	Destroy();
 }

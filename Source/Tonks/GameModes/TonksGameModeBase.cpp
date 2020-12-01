@@ -5,6 +5,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Tonks/Pawns/BasePawn.h"
 #include "Tonks/Controllers/TankPlayerController.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "DrawDebugHelpers.h" // TEMP
+
 
 void ATonksGameModeBase::BeginPlay()
 {
@@ -59,15 +62,6 @@ void ATonksGameModeBase::EndTurn()
 			CurrentTurnIndex = 0;
 
 		StartTurn();
-	}
-}
-
-void ATonksGameModeBase::ApplyDamage(AActor* DamageCauser, AActor* OtherActor, const FHitResult& Hit, float Damage, TSubclassOf<UDamageType> DamageType)
-{
-	UE_LOG(LogTemp, Warning, TEXT("OtherActor = %s"), *OtherActor->GetName());
-	if (OtherActor && DamageCauser)
-	{
-		UGameplayStatics::ApplyDamage(OtherActor, Damage, DamageCauser->GetInstigatorController(), DamageCauser, DamageType);
 	}
 }
 

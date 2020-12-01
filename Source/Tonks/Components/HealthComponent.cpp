@@ -32,7 +32,7 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 {
 	if (Damage == 0.f) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Actor took damage OH NOOO!!"));
+	UE_LOG(LogTemp, Warning, TEXT("%f"), Damage);
 
 	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.f, MaxHealth);
 

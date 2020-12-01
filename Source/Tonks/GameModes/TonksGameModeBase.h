@@ -19,7 +19,8 @@ public:
 	void ActorDied(AActor* DeadActor);
 	void StartTurn();
 	void EndTurn();
-	void ApplyDamage(AActor* Instigator, AActor* OtherActor, const FHitResult& Hit, float Damage, TSubclassOf<UDamageType> DamageType);
+	UFUNCTION(BlueprintImplementableEvent)
+	void CalculateRadialDamage (float BaseDamage, float MinimumDamage, AActor* Target, AActor* DamageCauser, float DamageInnerRadius, float DamageOuterRadius, float DamageFalloff, TSubclassOf<UDamageType> DamageType);
 
 protected:
 	virtual void BeginPlay() override;
