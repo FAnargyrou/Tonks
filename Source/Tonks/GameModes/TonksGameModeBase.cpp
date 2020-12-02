@@ -45,16 +45,20 @@ void ATonksGameModeBase::StartTurn()
 {
 	if (PlayerControllerRef && Tanks.Num() > 0 && Tanks[CurrentTurnIndex])
 	{
-		PlayerControllerRef->Possess(Tanks[CurrentTurnIndex]);
-		Tanks[CurrentTurnIndex]->SetOnTurn(true);
-		Tanks[CurrentTurnIndex]->ResetMovement();
+		CurrentTank = Tanks[CurrentTurnIndex];
+		if (CurrentTank)
+		{
+			PlayerControllerRef->Possess(CurrentTank);
+			CurrentTank->SetOnTurn(true);
+			CurrentTank->ResetMovement();
+		}
 	}
 }
 
 void ATonksGameModeBase::EndTurn()
 {
 	// If Tank Projectile exists then we should set a timer to let the animation play; Otherwise we can just end the turn.
-	if (Tanks.Num() > 0 && Tanks[CurrentTurnIndex] && Tanks[CurrentTurnIndex]->GetCurrentProjectile())
+	if (CurrentTank && CurrentTank->GetCurrentProjectile())
 	{
 		GetWorldTimerManager().SetTimer(EndTurnTimerHandle, this, &ATonksGameModeBase::HandleEndTurn, EndTurnDelay);
 	}
@@ -75,10 +79,11 @@ void ATonksGameModeBase::HandleGameOver()
 
 void ATonksGameModeBase::HandleEndTurn()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Current Turn: %i"), CurrentTurnIndex);
 	if (PlayerControllerRef)
 	{
-		if (Tanks.Num() > 0 && Tanks[CurrentTurnIndex] && Tanks[CurrentTurnIndex]->GetCurrentProjectile())
-			Tanks[CurrentTurnIndex]->GetCurrentProjectile()->Destroy();
+		if (CurrentTank && CurrentTank->GetCurrentProjectile())
+			CurrentTank->GetCurrentProjectile()->Destroy();
 
 		PlayerControllerRef->UnPossess();
 		if (++CurrentTurnIndex >= TotalTanks)
@@ -97,6 +102,7 @@ void ATonksGameModeBase::ActorDied(AActor* DeadActor)
 	{
 		Tanks.Remove(DeadTank);
 	}
+
 	DeadActor->Destroy();
 	TotalTanks--;
 		

@@ -36,6 +36,7 @@ private:
 	int8 CurrentTurnIndex = 0;
 	TArray<int32> TurnOrder;
 	TArray<ABasePawn*> Tanks;
+	ABasePawn* CurrentTank;
 	ATankPlayerController* PlayerControllerRef;
 	
 	FTimerHandle EndTurnTimerHandle;
