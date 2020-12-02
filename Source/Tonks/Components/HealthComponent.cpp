@@ -16,6 +16,21 @@ UHealthComponent::UHealthComponent()
 }
 
 
+void UHealthComponent::CalculateDamage()
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("Damage Received = %f"), DamageReceived);
+	CurrentHealth = FMath::Clamp(CurrentHealth - DamageReceived, 0.f, MaxHealth);
+	DamageReceived = 0.f;
+	if (CurrentHealth <= 0.f)
+	{
+		if (GameMode)
+		{
+			GameMode->ActorDied(GetOwner());
+		}
+	}
+}
+
 // Called when the game starts
 void UHealthComponent::BeginPlay()
 {
@@ -34,13 +49,6 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 
 	UE_LOG(LogTemp, Warning, TEXT("%f"), Damage);
 
-	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.f, MaxHealth);
+	DamageReceived = Damage;
 
-	if (CurrentHealth <= 0.f)
-	{
-		if (GameMode)
-		{
-			GameMode->ActorDied(GetOwner());
-		}
-	}
 }

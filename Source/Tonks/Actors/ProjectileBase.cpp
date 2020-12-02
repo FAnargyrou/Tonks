@@ -78,4 +78,6 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	GameModeRef->EndTurn();
 	// Set this as hidden and let GameMode delete this actor after damage dealt is displayed to the player.
 	SetActorHiddenInGame(true);
+
+	SpringArm->TargetArmLength += 200.f;
 }

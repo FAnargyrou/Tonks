@@ -53,9 +53,15 @@ void ATonksGameModeBase::StartTurn()
 
 void ATonksGameModeBase::EndTurn()
 {
-	// Temp solution for test purposes
-	// TODO - Improve implementation so player controlled pawn can smoothly transition
-	GetWorldTimerManager().SetTimer(EndTurnTimerHandle, this, &ATonksGameModeBase::HandleEndTurn, EndTurnDelay);
+	// If Tank Projectile exists then we should set a timer to let the animation play; Otherwise we can just end the turn.
+	if (Tanks.Num() > 0 && Tanks[CurrentTurnIndex] && Tanks[CurrentTurnIndex]->GetCurrentProjectile())
+	{
+		GetWorldTimerManager().SetTimer(EndTurnTimerHandle, this, &ATonksGameModeBase::HandleEndTurn, EndTurnDelay);
+	}
+	else
+	{
+		HandleEndTurn();
+	}
 }
 
 void ATonksGameModeBase::HandleGameStart()

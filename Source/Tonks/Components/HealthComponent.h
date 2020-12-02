@@ -16,6 +16,8 @@ class TONKS_API UHealthComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UHealthComponent();
+	UFUNCTION(BlueprintCallable)
+	void CalculateDamage();
 
 protected:
 	// Called when the game starts
@@ -28,6 +30,8 @@ private:
 	float MaxHealth = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthPoints", meta = (AllowPrivateAccess = "true"))
 	float CurrentHealth = 0.f;
+	UPROPERTY(BlueprintReadOnly, Category = "HealthPoints", meta = (AllowPrivateAccess = "true"))
+	float DamageReceived = 0.f;
 
 	ATonksGameModeBase* GameMode;
 };
