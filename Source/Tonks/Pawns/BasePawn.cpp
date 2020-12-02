@@ -144,6 +144,7 @@ void ABasePawn::Fire()
 		if (Player)
 			Player->SetViewTarget(Projectile);
 		MoveMode();
+		CurrentProjectile = Projectile;
 		bIsOnTurn = false;
 	}
 }
@@ -157,6 +158,11 @@ void ABasePawn::SetOnTurn(bool bOnTurn)
 void ABasePawn::ResetMovement()
 {
 	MoveDistance = MaxDistance;
+}
+
+AActor* ABasePawn::GetCurrentProjectile()
+{
+	return CurrentProjectile;
 }
 
 // TODO - Implement FMath::FInterpConstantTo to reproduce a smooth transition between Aim and Move Modes

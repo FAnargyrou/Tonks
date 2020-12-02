@@ -43,7 +43,7 @@ void ATonksGameModeBase::BeginPlay()
 
 void ATonksGameModeBase::StartTurn()
 {
-	if (PlayerControllerRef && Tanks[CurrentTurnIndex])
+	if (PlayerControllerRef && Tanks.Num() > 0 && Tanks[CurrentTurnIndex])
 	{
 		PlayerControllerRef->Possess(Tanks[CurrentTurnIndex]);
 		Tanks[CurrentTurnIndex]->SetOnTurn(true);
@@ -55,23 +55,31 @@ void ATonksGameModeBase::EndTurn()
 {
 	// Temp solution for test purposes
 	// TODO - Improve implementation so player controlled pawn can smoothly transition
-	if (PlayerControllerRef)
-	{
-		PlayerControllerRef->UnPossess();
-		if (++CurrentTurnIndex >= TotalTanks)
-			CurrentTurnIndex = 0;
-
-		StartTurn();
-	}
+	GetWorldTimerManager().SetTimer(EndTurnTimerHandle, this, &ATonksGameModeBase::HandleEndTurn, EndTurnDelay);
 }
 
 void ATonksGameModeBase::HandleGameStart()
 {
 }
 
-void ATonksGameModeBase::HandeGameOver()
+void ATonksGameModeBase::HandleGameOver()
 {
 	// To be defined 
+}
+
+void ATonksGameModeBase::HandleEndTurn()
+{
+	if (PlayerControllerRef)
+	{
+		if (Tanks.Num() > 0 && Tanks[CurrentTurnIndex] && Tanks[CurrentTurnIndex]->GetCurrentProjectile())
+			Tanks[CurrentTurnIndex]->GetCurrentProjectile()->Destroy();
+
+		PlayerControllerRef->UnPossess();
+		if (++CurrentTurnIndex >= TotalTanks)
+			CurrentTurnIndex = 0;
+
+		StartTurn();
+	}
 }
 
 void ATonksGameModeBase::ActorDied(AActor* DeadActor)

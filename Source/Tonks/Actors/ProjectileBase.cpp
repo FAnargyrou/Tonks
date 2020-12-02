@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Tonks/GameModes/TonksGameModeBase.h"
+#include "Tonks/Pawns/BasePawn.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -57,7 +58,24 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	AActor* MyOwner = GetOwner();
 	if (!MyOwner) return;
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *OtherActor->GetName());
-	GameModeRef->CalculateRadialDamage(Damage, MinimumDamage, OtherActor, this, InnerRadius, OuterRadius, DamageFalloff, DamageType);
+	FVector Origin;
+	ABasePawn* TargetPawn = Cast <ABasePawn>(OtherActor);
+
+	if (TargetPawn)
+	{
+		Origin = TargetPawn->GetActorLocation();
+	}
+	else
+	{
+		Origin = GetActorLocation();
+	}
+
+	TArray<AActor*> IgnoreActors;
+	IgnoreActors.Add(this);
+
+	UGameplayStatics::ApplyRadialDamageWithFalloff(GetWorld(), Damage, MinimumDamage, Origin,
+		InnerRadius, OuterRadius, DamageFalloff, DamageType, IgnoreActors, this, MyOwner->GetInstigatorController());
 	GameModeRef->EndTurn();
-	Destroy();
+	// Set this as hidden and let GameMode delete this actor after damage dealt is displayed to the player.
+	SetActorHiddenInGame(true);
 }

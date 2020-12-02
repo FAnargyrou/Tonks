@@ -19,9 +19,7 @@ public:
 	void ActorDied(AActor* DeadActor);
 	void StartTurn();
 	void EndTurn();
-	UFUNCTION(BlueprintImplementableEvent)
-	void CalculateRadialDamage (float BaseDamage, float MinimumDamage, AActor* Target, AActor* DamageCauser, float DamageInnerRadius, float DamageOuterRadius, float DamageFalloff, TSubclassOf<UDamageType> DamageType);
-
+	
 protected:
 	virtual void BeginPlay() override;
 	UFUNCTION(BlueprintImplementableEvent)
@@ -31,7 +29,8 @@ protected:
 
 private:
 	void HandleGameStart();
-	void HandeGameOver();
+	void HandleGameOver();
+	void HandleEndTurn();
 
 	int8 TotalTanks = 0;
 	int8 CurrentTurnIndex = 0;
@@ -39,4 +38,8 @@ private:
 	TArray<ABasePawn*> Tanks;
 	ATankPlayerController* PlayerControllerRef;
 	
+	FTimerHandle EndTurnTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turn Settings", meta = (AllowPrivateAccess = "true"))
+	float EndTurnDelay = 5.f;
 };

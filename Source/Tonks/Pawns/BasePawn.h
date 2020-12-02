@@ -31,6 +31,8 @@ public:
 	void SetOnTurn(bool bOnTurn);
 	void ResetMovement();
 
+	AActor* GetCurrentProjectile();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -106,4 +108,5 @@ private:
 	float GunMaxPitch = 50.f;
 
 	ATonksGameModeBase* GameModeRef;
+	AProjectileBase* CurrentProjectile;
 };
