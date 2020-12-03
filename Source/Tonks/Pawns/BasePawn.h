@@ -83,7 +83,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// VARIABLES
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AProjectileBase> ProjectileClass;
 
 	// Spring Arm Length used in MoveMode; Obtained from whatever value is set in the Blueprint
@@ -109,9 +109,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true"))
 	float GunMaxPitch = 50.f;
 
-	float MaxProjectileSpeed = 1800.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
+	float MaxProjectileSpeed = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
 	float CurrentProjectileSpeed = 0.f;
-	float ProjectileSpeedIncrement = 1000.f;
+	float ProjectileSpeedIncrement = 50.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
 	bool bIsPreparingFire = false;
 
 	ATonksGameModeBase* GameModeRef;
