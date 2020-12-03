@@ -28,7 +28,8 @@ private:
 	void LookUpInput(float Amount);
 	void AimInputPressed();
 	void AimInputReleased();
-	void FireInput();
+	void FireInputPressed();
+	void FireInputReleased();
 	void EndTurnInput();
 
 

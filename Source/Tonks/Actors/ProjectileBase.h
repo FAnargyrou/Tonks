@@ -59,6 +59,8 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	void AddVelocity(float Multiplier);
 
 protected:
 	// Called when the game starts or when spawned

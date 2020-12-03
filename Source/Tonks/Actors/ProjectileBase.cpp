@@ -21,8 +21,6 @@ AProjectileBase::AProjectileBase()
 	RootComponent = ProjectileMesh;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
-	ProjectileMovement->InitialSpeed = MovementSpeed;
-	ProjectileMovement->MaxSpeed = MovementSpeed;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -51,6 +49,15 @@ void AProjectileBase::Tick(float DeltaTime)
 
 	FRotator CameraRotation = GetWorld()->GetFirstPlayerController()->GetControlRotation();
 	SpringArm->SetWorldRotation(CameraRotation);
+}
+
+void AProjectileBase::AddVelocity(float Multiplier)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Current Velocity = %s"), *ProjectileMovement->Velocity.ToString());
+	FVector CurrentVelocity = ProjectileMovement->Velocity * Multiplier;
+	UE_LOG(LogTemp, Warning, TEXT("New Velocity = %s"), *CurrentVelocity.ToString());
+	ProjectileMovement->Velocity = CurrentVelocity;
+	ProjectileMovement->UpdateComponentVelocity();
 }
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

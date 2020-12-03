@@ -82,6 +82,18 @@ void ABasePawn::Tick(float DeltaTime)
 			SetActorRotation(FRotator(0.f, Rot.Yaw, 0.f));
 		}
 	}
+
+	if (bIsPreparingFire)
+	{
+		CurrentProjectileSpeed = FMath::Clamp(CurrentProjectileSpeed + (ProjectileSpeedIncrement * DeltaTime), 0.f, MaxProjectileSpeed);
+		if (CurrentProjectileSpeed >= MaxProjectileSpeed)
+			ProjectileSpeedIncrement *= -1.f;
+		else if (FMath::IsNearlyZero(CurrentProjectileSpeed, FLOAT_NORMAL_THRESH) || CurrentProjectileSpeed < 0.f)
+			ProjectileSpeedIncrement *= -1.f;
+
+		UE_LOG(LogTemp, Warning, TEXT("Current Speed = %f"), CurrentProjectileSpeed);
+
+	}
 }
 
 // Called to bind functionality to input
@@ -130,6 +142,21 @@ void ABasePawn::LookUp(FQuat LookUpDirection)
 	}
 }
 
+void ABasePawn::PrepareFire()
+{
+	if (bIsInAimMode && bIsOnTurn)
+		bIsPreparingFire = true;
+}
+
+void ABasePawn::ReleaseFire()
+{
+	if (bIsInAimMode && bIsOnTurn)
+	{
+		bIsPreparingFire = false;
+		Fire();
+	}
+}
+
 void ABasePawn::Fire()
 {
 	if (ProjectileClass && bIsInAimMode)
@@ -138,6 +165,9 @@ void ABasePawn::Fire()
 		FRotator Rotation = ProjectileSpawnPoint->GetComponentRotation();
 
 		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, Position, Rotation);
+		Projectile->AddVelocity(CurrentProjectileSpeed);
+		// Reset modifier back to 0.f ready for this Pawn's next turn
+		CurrentProjectileSpeed = 0.f;
 		Projectile->SetOwner(this);
 
 		APlayerController* Player = Cast<APlayerController>(Controller);

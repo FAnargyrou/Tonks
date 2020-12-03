@@ -27,6 +27,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void PrepareFire();
+	void ReleaseFire();
 	void Fire();
 	void SetOnTurn(bool bOnTurn);
 	void ResetMovement();
@@ -106,6 +108,11 @@ private:
 	float GunMinPitch = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true"))
 	float GunMaxPitch = 50.f;
+
+	float MaxProjectileSpeed = 1800.f;
+	float CurrentProjectileSpeed = 0.f;
+	float ProjectileSpeedIncrement = 1000.f;
+	bool bIsPreparingFire = false;
 
 	ATonksGameModeBase* GameModeRef;
 	AProjectileBase* CurrentProjectile;

@@ -14,7 +14,8 @@ void ATankPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("LookUp", this, &ATankPlayerController::LookUpInput);
 	InputComponent->BindAction("Aim", IE_Pressed, this, &ATankPlayerController::AimInputPressed);
 	InputComponent->BindAction("Aim", IE_Released, this, &ATankPlayerController::AimInputReleased);
-	InputComponent->BindAction("Fire", IE_Pressed, this, &ATankPlayerController::FireInput);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ATankPlayerController::FireInputPressed);
+	InputComponent->BindAction("Fire", IE_Released, this, &ATankPlayerController::FireInputReleased);
 	InputComponent->BindAction("EndTurn", IE_Pressed, this, &ATankPlayerController::EndTurnInput);
 }
 
@@ -81,11 +82,19 @@ void ATankPlayerController::AimInputReleased()
 	}
 }
 
-void ATankPlayerController::FireInput()
+void ATankPlayerController::FireInputPressed()
 {
 	if (TankPawn)
 	{
-		TankPawn->Fire();
+		TankPawn->PrepareFire();
+	}
+}
+
+void ATankPlayerController::FireInputReleased()
+{
+	if (TankPawn)
+	{
+		TankPawn->ReleaseFire();
 	}
 }
 
