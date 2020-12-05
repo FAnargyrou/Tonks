@@ -54,7 +54,7 @@ void AProjectileBase::Tick(float DeltaTime)
 void AProjectileBase::AddVelocity(float Multiplier)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Current Velocity = %s"), *ProjectileMovement->Velocity.ToString());
-	FVector CurrentVelocity = ProjectileMovement->Velocity * Multiplier;
+	FVector CurrentVelocity = ProjectileMovement->Velocity.GetSafeNormal() * Multiplier;
 	UE_LOG(LogTemp, Warning, TEXT("New Velocity = %s"), *CurrentVelocity.ToString());
 	ProjectileMovement->Velocity = CurrentVelocity;
 	ProjectileMovement->UpdateComponentVelocity();

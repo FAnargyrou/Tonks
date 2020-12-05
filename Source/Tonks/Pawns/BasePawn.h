@@ -110,10 +110,10 @@ private:
 	float GunMaxPitch = 50.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
-	float MaxProjectileSpeed = 100.f;
+	float MaxProjectileSpeed = 3000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
 	float CurrentProjectileSpeed = 0.f;
-	float ProjectileSpeedIncrement = 50.f;
+	float ProjectileSpeedIncrement = 1000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Settings", meta = (AllowPrivateAccess = "true"))
 	bool bIsPreparingFire = false;
 
