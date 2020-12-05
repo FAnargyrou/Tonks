@@ -216,7 +216,7 @@ void ABasePawn::AimMode()
 // Attaches the SpringArm/Player Camera back to it's original Position and allows player to move around again
 void ABasePawn::MoveMode()
 {
-	if (SpringArm && bIsInAimMode && bIsOnTurn)
+	if (SpringArm && bIsInAimMode && bIsOnTurn && !bIsPreparingFire)
 	{
 		SpringArm->TargetArmLength = OriginalSpringArmLength;
 		Controller->SetControlRotation(MoveModeRotation);
