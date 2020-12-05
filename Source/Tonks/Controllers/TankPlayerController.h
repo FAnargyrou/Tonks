@@ -14,6 +14,8 @@ class TONKS_API ATankPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddWidget();
 
 protected:
 	// Function to bind Input to functions

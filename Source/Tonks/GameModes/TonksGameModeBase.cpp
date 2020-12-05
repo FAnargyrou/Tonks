@@ -13,31 +13,6 @@ void ATonksGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<AActor*> Actors;
-
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABasePawn::StaticClass(), Actors);
-
-	for (AActor* Actor : Actors)
-	{
-		ABasePawn* Tank = Cast<ABasePawn>(Actor);
-
-		if (Tank) Tanks.Add(Tank);
-	}
-
-	TotalTanks = Tanks.Num();
-	for (int8 Index = 0; Index < TotalTanks; ++Index)
-	{
-		TurnOrder.Add(Index);
-	}
-	for (int32 i = 0; i < TotalTanks - 1; ++i)
-	{
-		int32 SwapIndex = FMath::RandRange(i, TotalTanks - 1);
-		Tanks.Swap(i, SwapIndex);
-	}
-
-	PlayerControllerRef = Cast<ATankPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-
-	StartTurn();
 }
 
 
@@ -70,6 +45,39 @@ void ATonksGameModeBase::EndTurn()
 
 void ATonksGameModeBase::HandleGameStart()
 {
+	TArray<AActor*> Actors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABasePawn::StaticClass(), Actors);
+
+	for (AActor* Actor : Actors)
+	{
+		ABasePawn* Tank = Cast<ABasePawn>(Actor);
+
+		if (Tank) Tanks.Add(Tank);
+	}
+
+	TotalTanks = Tanks.Num();
+	for (int8 Index = 0; Index < TotalTanks; ++Index)
+	{
+		TurnOrder.Add(Index);
+	}
+	for (int32 i = 0; i < TotalTanks - 1; ++i)
+	{
+		int32 SwapIndex = FMath::RandRange(i, TotalTanks - 1);
+		Tanks.Swap(i, SwapIndex);
+	}
+
+	PlayerControllerRef = Cast<ATankPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (!PlayerControllerRef)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerController is not set to ATankPlayerController. Game Loop will NOT work as intended!"));
+	}
+	else
+	{
+		PlayerControllerRef->AddWidget();
+	}
+
+	StartTurn();
 }
 
 void ATonksGameModeBase::HandleGameOver()

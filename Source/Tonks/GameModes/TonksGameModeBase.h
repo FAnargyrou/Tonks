@@ -28,6 +28,7 @@ protected:
 	void GameOver();
 
 private:
+	UFUNCTION(BlueprintCallable)
 	void HandleGameStart();
 	void HandleGameOver();
 	void HandleEndTurn();
