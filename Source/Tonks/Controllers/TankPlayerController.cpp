@@ -32,6 +32,10 @@ void ATankPlayerController::OnPossess(APawn* PawnToPossess)
 	SetControlRotation(NewRotation);
 
 	TankPawn = Cast<ATankPawn>(PawnToPossess);
+	if (TankPawn)
+	{
+		TankPawn->InitiateTurn();
+	}
 }
 
 void ATankPlayerController::MoveInput(float Amount)

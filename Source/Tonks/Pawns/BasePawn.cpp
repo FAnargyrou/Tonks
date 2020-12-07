@@ -46,14 +46,8 @@ ABasePawn::ABasePawn()
 void ABasePawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	OriginalSpringArmLength = SpringArm->TargetArmLength;
 
-	// Sets Controller Rotation's intial Pitch to SpringArm's Relative Pitch 
-	// (To ensure a smooth Start in the game, instead of spawning the camera straight at the back of the tank)
-	FRotator Rotator = GetControlRotation();
-	Rotator.Pitch = SpringArm->GetRelativeRotation().Pitch;
-	Controller->SetControlRotation(Rotator);
+	OriginalSpringArmLength = SpringArm->TargetArmLength;
 
 	GameModeRef = Cast<ATonksGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	if (!GameModeRef)
@@ -101,6 +95,22 @@ void ABasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABasePawn::InitiateTurn()
+{
+
+	// Sets Controller Rotation's intial Pitch to SpringArm's Relative Pitch 
+	// (To ensure a smooth Start in the game, instead of spawning the camera straight at the back of the tank)
+	FRotator Rotator = GetControlRotation();
+	Rotator.Pitch = SpringArm->GetRelativeRotation().Pitch;
+	Controller->SetControlRotation(Rotator);
+
+	// Reset CurrentProjectile to a nullptr as this shouldn't be referenced anymore
+	if (CurrentProjectile)
+	{
+		CurrentProjectile = nullptr;
+	}
 }
 
 void ABasePawn::Move(FVector MoveDirection)
