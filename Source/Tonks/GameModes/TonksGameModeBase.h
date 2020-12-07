@@ -38,6 +38,8 @@ private:
 	TArray<int32> TurnOrder;
 	TArray<ABasePawn*> Tanks;
 	ABasePawn* CurrentTank;
+	UPROPERTY(BlueprintReadOnly, Category = "Game Stats", meta = (AllowPrivateAccess = "true"))
+	ABasePawn* LastTankAlive;
 	ATankPlayerController* PlayerControllerRef;
 	
 	FTimerHandle EndTurnTimerHandle;

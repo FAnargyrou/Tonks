@@ -32,7 +32,6 @@ public:
 	void PrepareFire();
 	void ReleaseFire();
 	void Fire();
-	void SetOnTurn(bool bOnTurn);
 	void ResetMovement();
 
 	AActor* GetCurrentProjectile();
@@ -121,4 +120,7 @@ private:
 
 	ATonksGameModeBase* GameModeRef;
 	AProjectileBase* CurrentProjectile;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
+	FString PlayerName = "Default Name";
 };

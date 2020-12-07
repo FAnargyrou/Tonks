@@ -111,6 +111,8 @@ void ABasePawn::InitiateTurn()
 	{
 		CurrentProjectile = nullptr;
 	}
+
+	bIsOnTurn = true;
 }
 
 void ABasePawn::Move(FVector MoveDirection)
@@ -189,12 +191,6 @@ void ABasePawn::Fire()
 	}
 }
 
-void ABasePawn::SetOnTurn(bool bOnTurn)
-{
-	bIsOnTurn = bOnTurn;
-
-}
-
 void ABasePawn::ResetMovement()
 {
 	MoveDistance = MaxDistance;
@@ -244,7 +240,7 @@ void ABasePawn::EndTurn()
 {
 	if (GameModeRef && !bIsInAimMode && bIsOnTurn)
 	{
-		SetOnTurn(false);
+		bIsOnTurn = false;
 		GameModeRef->EndTurn();
 	}
 }

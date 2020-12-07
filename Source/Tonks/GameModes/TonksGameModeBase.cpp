@@ -18,13 +18,13 @@ void ATonksGameModeBase::BeginPlay()
 
 void ATonksGameModeBase::StartTurn()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Starting Turn"));
 	if (PlayerControllerRef && Tanks.Num() > 0 && Tanks[CurrentTurnIndex])
 	{
 		CurrentTank = Tanks[CurrentTurnIndex];
 		if (CurrentTank)
 		{
 			PlayerControllerRef->Possess(CurrentTank);
-			CurrentTank->SetOnTurn(true);
 			CurrentTank->ResetMovement();
 		}
 	}
@@ -82,7 +82,9 @@ void ATonksGameModeBase::HandleGameStart()
 
 void ATonksGameModeBase::HandleGameOver()
 {
-	// To be defined 
+	if (Tanks.Num() != 0 && Tanks[0])
+		LastTankAlive = Tanks[0];
+	GameOver();
 }
 
 void ATonksGameModeBase::HandleEndTurn()
@@ -96,6 +98,11 @@ void ATonksGameModeBase::HandleEndTurn()
 		PlayerControllerRef->UnPossess();
 		if (++CurrentTurnIndex >= TotalTanks)
 			CurrentTurnIndex = 0;
+		if (TotalTanks <= 1)
+		{
+			HandleGameOver();
+			return;
+		}
 
 		StartTurn();
 	}
@@ -109,6 +116,11 @@ void ATonksGameModeBase::ActorDied(AActor* DeadActor)
 	if (DeadTank)
 	{
 		Tanks.Remove(DeadTank);
+		if (DeadTank == CurrentTank)
+		{
+			PlayerControllerRef->UnPossess();
+			CurrentTank = nullptr;
+		}
 	}
 
 	DeadActor->Destroy();
