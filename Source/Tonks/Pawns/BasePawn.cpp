@@ -201,6 +201,11 @@ AActor* ABasePawn::GetCurrentProjectile()
 	return CurrentProjectile;
 }
 
+FString ABasePawn::GetPlayerName()
+{
+	return PlayerName;
+}
+
 // TODO - Implement FMath::FInterpConstantTo to reproduce a smooth transition between Aim and Move Modes
 // Attaches the SpringArm/Player Camera to the AimModePoint Component, which should be set to somewhere around the GunMesh
 void ABasePawn::AimMode()

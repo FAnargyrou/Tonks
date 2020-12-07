@@ -19,6 +19,8 @@ public:
 	void ActorDied(AActor* DeadActor);
 	void StartTurn();
 	void EndTurn();
+	UFUNCTION(BlueprintCallable)
+	FString GetPlayerOrder();
 	
 protected:
 	virtual void BeginPlay() override;

@@ -35,6 +35,7 @@ public:
 	void ResetMovement();
 
 	AActor* GetCurrentProjectile();
+	FString GetPlayerName();
 
 protected:
 	// Called when the game starts or when spawned

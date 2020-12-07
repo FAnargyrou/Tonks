@@ -43,6 +43,17 @@ void ATonksGameModeBase::EndTurn()
 	}
 }
 
+FString ATonksGameModeBase::GetPlayerOrder()
+{
+	FString Players = "";
+	for (ABasePawn* Tank : Tanks)
+	{
+		Players.Append(Tank->GetPlayerName());
+	}
+
+	return Players;
+}
+
 void ATonksGameModeBase::HandleGameStart()
 {
 	TArray<AActor*> Actors;
