@@ -24,7 +24,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void GameStart();
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameOver();

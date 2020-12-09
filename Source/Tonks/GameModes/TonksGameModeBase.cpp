@@ -48,7 +48,7 @@ FString ATonksGameModeBase::GetPlayerOrder()
 	FString Players = "";
 	for (ABasePawn* Tank : Tanks)
 	{
-		Players.Append(Tank->GetPlayerName());
+		Players.Append(Tank->GetPlayerName() + "\n");
 	}
 
 	return Players;
