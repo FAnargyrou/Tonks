@@ -11,4 +11,4 @@ I started my journey as a Game Developer back in Unreal Engine 3 (UDK). At the t
 
 ## Author
 
-* **Felipe Anargyrou** - [GhostFinn](https://github.com/GhostFinn)
+* **Felipe Anargyrou** - [FAnargyrou](https://github.com/FAnargyrou)
